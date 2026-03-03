@@ -149,8 +149,8 @@ function configureTexture(image) {
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, tex);
 
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
 
@@ -265,10 +265,14 @@ window.onload = function init() {
     configureDefaultTexture();
     configureDefaultCubeMap();
 
+
+    //img src for sphere texture
+    //"https://ekim1678.github.io/personal-website/resources/computergraphicstextures/spheretexture.jpg"
+
     // Load the image
     let image = new Image();
     image.crossOrigin = "";
-    image.src = "https://webglfundamentals.org/webgl/resources/f-texture.png";
+    image.src = "https://ekim1678.github.io/personal-website/resources/computergraphicstextures/skyboxtexture.jpg";
     image.onload = function() {
         configureTexture(image);
         configureCubeMap(image);
