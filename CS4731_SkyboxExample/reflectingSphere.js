@@ -31,6 +31,8 @@ let cameraMatrixLoc, cameraInverseMatrixLoc;
 let vTexCoord, vNormal, vPosition;
 let cameraMatrix;
 
+let useSpecular = true;
+let useDiffuse = true;
 
 let eye = vec3(3, 2, 6);
 let at = vec3(0.0, 0.0, 0.0);
@@ -379,25 +381,26 @@ window.onload = async function init() {
     bladeOffsetY = bladeStartY;
 
     // Lighting stuff
-    let lightPosition = vec4(1.5, 1.5, 3.0, 1.0 );
-    let lightAmbient = vec4(0.2, 0.2, 0.2, 1.0 );
-    let lightDiffuse = vec4( 1.0, 1.0, 1.0, 1.0 );
-    let lightSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
+    let lightPosition = vec4(1.5, 1.5, 3.0, 1.0);
+    let lightAmbient = vec4(0.2, 0.2, 0.2, 1.0);
+    let lightDiffuse = vec4(1.0, 1.0, 1.0, 1.0);
+    let lightSpecular = vec4(1.0, 1.0, 1.0, 1.0);
 
-    let materialAmbient = vec4( 1.0, 0.0, 1.0, 1.0 );
-    let materialDiffuse = vec4( 1.0, 0.8, 0.0, 1.0 );
-    let materialSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
+    let materialAmbient = vec4(1.0, 0.0, 1.0, 1.0);
+    let materialDiffuse = vec4(1.0, 0.8, 0.0, 1.0);
+    let materialSpecular = vec4(1.0, 1.0, 1.0, 1.0);
     let materialShininess = 20.0;
 
     let ambientProduct = mult(lightAmbient, materialAmbient);
     let diffuseProduct = mult(lightDiffuse, materialDiffuse);
     let specularProduct = mult(lightSpecular, materialSpecular);
 
-    gl.uniform4fv( gl.getUniformLocation(program,"ambientProduct"), flatten(ambientProduct) );
-    gl.uniform4fv( gl.getUniformLocation(program,"diffuseProduct"), flatten(diffuseProduct) );
-    gl.uniform4fv( gl.getUniformLocation(program,"specularProduct"), flatten(specularProduct) );
-    gl.uniform4fv( gl.getUniformLocation(program,"lightPosition"), flatten(lightPosition) );
-    gl.uniform1f( gl.getUniformLocation(program, "shininess"), materialShininess );
+    gl.uniform4fv(gl.getUniformLocation(program, "ambientProduct"), flatten(ambientProduct));
+    gl.uniform4fv(gl.getUniformLocation(program, "diffuseProduct"), flatten(diffuseProduct));
+    gl.uniform4fv(gl.getUniformLocation(program, "specularProduct"), flatten(specularProduct));
+    gl.uniform4fv(gl.getUniformLocation(program, "lightPosition"), flatten(lightPosition));
+    gl.uniform1f(gl.getUniformLocation(program, "shininess"), materialShininess);
+
 
     // Default textures
     configureDefaultTexture();
@@ -449,11 +452,15 @@ window.onload = async function init() {
     window.addEventListener("keydown", (event) => {
         if (event.key === "k" || event.key === "K") {
             if(animating){
-                bladeOffsetY = bladeStartY;
-                bladeSpeed = 2.0;
+                //bladeOffsetY = bladeStartY;
+                bladeSpeed = 100.0;
+                bladeDir = 1;
             }
-            animating = !animating;
-            bladeDir = -1;
+            else{
+                animating = true;
+                bladeSpeed = 2.0;
+                bladeDir = -1;
+            }
         }
         let rotSpeed = 0.03;
         if (event.key === "ArrowLeft"){
@@ -470,6 +477,12 @@ window.onload = async function init() {
         }
         let maxPitch = Math.PI/2 - 0.01;
         pitch = Math.max(-maxPitch, Math.min(maxPitch, pitch));
+        if (event.key === "l" || event.key === "L"){
+            useSpecular = !useSpecular;
+        }
+        if (event.key === "o" || event.key === "O"){
+            useDiffuse = !useDiffuse;
+        }
     });
     lastTime = performance.now();
 
@@ -537,6 +550,34 @@ function render() {
 
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
+
+    let lightPosition = vec4(1.5, 1.5, 3.0, 1.0);
+    let lightAmbient = vec4(0.2, 0.2, 0.2, 1.0);
+
+    let materialAmbient = vec4(1.0, 0.0, 1.0, 1.0);
+    let materialShininess = 20.0;
+
+    let ambientProduct = mult(lightAmbient, materialAmbient);
+
+    gl.uniform4fv(gl.getUniformLocation(program, "ambientProduct"), flatten(ambientProduct));
+    gl.uniform4fv(gl.getUniformLocation(program, "lightPosition"), flatten(lightPosition));
+    gl.uniform1f(gl.getUniformLocation(program, "shininess"), materialShininess);
+    let specularProduct = vec4(0.0,0.0,0.0,0.0);
+    if(useSpecular) {
+        let lightSpecular = vec4(1.0, 1.0, 1.0, 1.0);
+        let materialSpecular = vec4(1.0, 1.0, 1.0, 1.0);
+        specularProduct = mult(lightSpecular, materialSpecular);
+
+    }
+    let diffuseProduct = vec4(0.0,0.0,0.0,0.0);
+    if(useDiffuse){
+        let lightDiffuse = vec4(1.0, 1.0, 1.0, 1.0);
+        let materialDiffuse = vec4(1.0, 0.8, 0.0, 1.0);
+        diffuseProduct = mult(lightDiffuse, materialDiffuse);
+
+    }
+    gl.uniform4fv(gl.getUniformLocation(program, "specularProduct"), flatten(specularProduct));
+    gl.uniform4fv(gl.getUniformLocation(program, "diffuseProduct"), flatten(diffuseProduct));
 
     const now = performance.now();
     const deltaTime = (now - lastTime) / 1000.0;
