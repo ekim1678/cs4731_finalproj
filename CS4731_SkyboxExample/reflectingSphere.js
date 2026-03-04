@@ -441,6 +441,10 @@ window.onload = async function init() {
 
     window.addEventListener("keydown", (event) => {
         if (event.key === "k" || event.key === "K") {
+            if(animating){
+                bladeOffsetY = bladeStartY;
+                bladeSpeed = 2.0;
+            }
             animating = !animating;
             bladeDir = -1;
         }
@@ -517,16 +521,21 @@ function render() {
 
     if (animating) {
 
+        if (bladeDir < 0) {
+            bladeSpeed *= 1.5;
+        }
         bladeOffsetY += bladeDir * bladeSpeed * deltaTime;
 
         if (bladeOffsetY <= bladeEndY) {
             bladeOffsetY = bladeEndY;
             bladeDir = 1;
+            bladeSpeed = 2.0;
         }
 
         if (bladeOffsetY >= bladeStartY) {
             bladeOffsetY = bladeStartY;
             bladeDir = -1;
+            animating = false;
         }
     }
 
