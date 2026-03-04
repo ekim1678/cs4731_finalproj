@@ -32,6 +32,12 @@ let vTexCoord, vNormal, vPosition;
 let cameraMatrix;
 
 
+let eye = vec3(3, 2, 6);
+let at = vec3(0.0, 0.0, 0.0);
+let up = vec3(0.0, 1.0, 0.0);
+let yaw = 10.0;
+let pitch = -0.2;
+
 function quad(a, b, c, d) {
     let minT = 0.0;
     let maxT = 1.0;
@@ -448,6 +454,21 @@ window.onload = async function init() {
             animating = !animating;
             bladeDir = -1;
         }
+        let rotSpeed = 0.03;
+        if (event.key === "ArrowLeft"){
+            yaw += rotSpeed;
+        }
+        if (event.key === "ArrowRight"){
+            yaw -= rotSpeed;
+        }
+        if (event.key === "ArrowUp"){
+            pitch += rotSpeed;
+        }
+        if (event.key === "ArrowDown"){
+            pitch -= rotSpeed;
+        }
+        let maxPitch = Math.PI/2 - 0.01;
+        pitch = Math.max(-maxPitch, Math.min(maxPitch, pitch));
     });
     lastTime = performance.now();
 
@@ -540,11 +561,16 @@ function render() {
     }
 
     //let eye = vec3(2 * Math.sin(alpha), 0.0, 2 * Math.cos(alpha));
-    let eye = vec3(3, 2, 6);
-    let at = vec3(0.0, 0.0, 0.0);
-    let up = vec3(0.0, 1.0, 0.0);
 
     alpha += 0.005;
+
+    let forward = vec3(
+        Math.cos(pitch) * Math.sin(yaw),
+        Math.sin(pitch),
+        Math.cos(pitch) * Math.cos(yaw)
+    );
+    at = add(eye, forward);
+
 
     cameraMatrix = lookAt(eye, at, up);
     gl.uniformMatrix4fv(cameraMatrixLoc, false, flatten(cameraMatrix) );
