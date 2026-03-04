@@ -347,7 +347,7 @@ window.onload = async function init() {
     const frameBounds = centerModel(frameVertices);
     const bladeBounds = centerModel(bladeVertices);
 
-    let scaleValue = 0.002;
+    let scaleValue = 0.05;
 
     for (let i = 0; i < frameVertices.length; i++) {
         frameVertices[i] = vec4(
@@ -373,8 +373,8 @@ window.onload = async function init() {
     let bladeMinY = bladeBounds.minY * scaleValue;
     let bladeMaxY = bladeBounds.maxY * scaleValue;
 
-    bladeStartY = frameMaxY + 2.2;
-    bladeEndY = frameMinY -3;
+    bladeStartY = frameMaxY - bladeMaxY;
+    bladeEndY = frameMinY + bladeMinY;
     bladeOffsetY = bladeStartY;
 
     // Lighting stuff
@@ -478,6 +478,7 @@ window.onload = async function init() {
 function drawObject(vertices, normals, modelMatrix) {
 
     let mat = mult(cameraMatrix, modelMatrix);
+    gl.uniform1i(gl.getUniformLocation(program, "isSkybox"), 0);
 
     gl.uniformMatrix4fv(cameraMatrixLoc, false, flatten(mat));
     const vBuffer = gl.createBuffer();
