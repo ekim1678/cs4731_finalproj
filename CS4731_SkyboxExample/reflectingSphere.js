@@ -38,6 +38,7 @@ let up = vec3(0.0, 1.0, 0.0);
 let yaw = 10.0;
 let pitch = -0.2;
 
+
 function quad(a, b, c, d) {
     let minT = 0.0;
     let maxT = 1.0;
@@ -374,7 +375,7 @@ window.onload = async function init() {
     let bladeMaxY = bladeBounds.maxY * scaleValue;
 
     bladeStartY = frameMaxY - bladeMaxY;
-    bladeEndY = frameMinY + bladeMinY;
+    bladeEndY = frameMinY + bladeMinY + 2.75;
     bladeOffsetY = bladeStartY;
 
     // Lighting stuff
@@ -544,7 +545,7 @@ function render() {
     if (animating) {
 
         if (bladeDir < 0) {
-            bladeSpeed *= 1.5;
+            bladeSpeed *= 1.25;
         }
         bladeOffsetY += bladeDir * bladeSpeed * deltaTime;
 
