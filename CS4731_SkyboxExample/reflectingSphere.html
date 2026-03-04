@@ -57,6 +57,7 @@ varying vec3 viewDirWorld, N_world;
 uniform vec4 lightPosition;
 uniform samplerCube texMap;
 uniform sampler2D tex1;
+uniform sampler2D tex2;
 uniform bool isSkybox;
 
 void main()
@@ -90,7 +91,8 @@ void main()
         vec3 refr = refract(viewDirWorld, N_world, 0.5);
         vec4 texColor = textureCube(texMap, refl);
         vec4 refrColor = textureCube(texMap, refr);
-        gl_FragColor = 0.5 * fColor +  0.25 * texColor + 0.25 * refrColor;
+        gl_FragColor = fColor;
+        // 0.5 * fColor +  0.25 * texColor + 0.25 * refrColor;
     }
     else {
         gl_FragColor = texture2D(tex1, fTexCoord);

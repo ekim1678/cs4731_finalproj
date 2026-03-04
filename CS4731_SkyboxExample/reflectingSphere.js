@@ -2,6 +2,13 @@ let canvas;
 let gl;
 let program;
 
+let leftLoad = false;
+let mouthLoad = false;
+let rightLoad = false;
+let hairLoad = false;
+let foreheadLoad = false;
+let fronthairLoad = false;
+
 let pointsArray = [];
 let normalsArray = [];
 let texCoordsArray = [];
@@ -95,6 +102,29 @@ function configureDefaultCubeMap() {
     gl.uniform1i(gl.getUniformLocation(program, "texMap"), 1);
 }
 
+function configureDefaultCubeMapSphere() {
+    let cubeMap = gl.createTexture();
+    gl.activeTexture(gl.TEXTURE1);
+    gl.bindTexture(gl.TEXTURE_CUBE_MAP, cubeMap);
+
+    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+
+    let blue = new Uint8Array([0, 0, 255, 255]);
+
+    gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_X, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, blue);
+    gl.texImage2D(gl.TEXTURE_CUBE_MAP_NEGATIVE_X, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, blue);
+    gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_Y, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, blue);
+    gl.texImage2D(gl.TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, blue);
+    gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_Z, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, blue);
+    gl.texImage2D(gl.TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, blue);
+
+    gl.uniform1i(gl.getUniformLocation(program, "texMap"), 1);
+}
+
 function configureCubeMap(image) {
     let cubeMap = gl.createTexture();
     gl.activeTexture(gl.TEXTURE1);
@@ -112,6 +142,27 @@ function configureCubeMap(image) {
     gl.texImage2D(gl.TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
     gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_Z, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
     gl.texImage2D(gl.TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
+
+    gl.uniform1i(gl.getUniformLocation(program, "texMap"), 1);
+}
+
+function configureCubeMapSphere(leftEar, mouth, rightEar, hair, forehead, fronthair) {
+    let cubeMap = gl.createTexture();
+    gl.activeTexture(gl.TEXTURE1);
+    gl.bindTexture(gl.TEXTURE_CUBE_MAP, cubeMap);
+
+    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+
+    gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_X, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, leftEar);
+    gl.texImage2D(gl.TEXTURE_CUBE_MAP_NEGATIVE_X, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, mouth);
+    gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_Y, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, rightEar);
+    gl.texImage2D(gl.TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, hair);
+    gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_Z, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, forehead);
+    gl.texImage2D(gl.TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, fronthair);
 
     gl.uniform1i(gl.getUniformLocation(program, "texMap"), 1);
 }
@@ -206,6 +257,10 @@ function tetrahedron(n) {
     divideTriangle(a, c, d, n);
 }
 
+function checkLoad(){
+    return leftLoad && hairLoad && rightLoad && mouthLoad && fronthairLoad && foreheadLoad;
+}
+
 window.onload = function init() {
 
     canvas = document.getElementById( "gl-canvas" );
@@ -264,12 +319,60 @@ window.onload = function init() {
     // Default textures
     configureDefaultTexture();
     configureDefaultCubeMap();
+    configureDefaultCubeMapSphere();
+
+    //Load the image for sphere
+    let leftEar = new Image();
+    leftEar.crossOrigin = "";
+    leftEar.src = "https://ekim1678.github.io/personal-website/resources/computergraphicstextures/leftear.jpg"
+    leftEar.onload = function () {
+        configureTexture(leftEar);
+        leftLoad = true;
+        if(checkLoad()){configureCubeMapSphere(leftEar, mouth, rightEar, hair, forehead, fronthair)}
+    }
+    let mouth = new Image();
+    mouth.crossOrigin = "";
+    mouth.src = "https://ekim1678.github.io/personal-website/resources/computergraphicstextures/mouth.jpg"
+    mouth.onload = function () {
+        configureTexture(mouth);
+        mouthLoad = true;
+        if(checkLoad())configureCubeMapSphere(leftEar, mouth, rightEar, hair, forehead, fronthair);
+    }
+    let rightEar = new Image();
+    rightEar.crossOrigin = "";
+    rightEar.src = "https://ekim1678.github.io/personal-website/resources/computergraphicstextures/rightear.jpg"
+    rightEar.onload = function () {
+        configureTexture(rightEar);
+        rightLoad = true;
+        if(checkLoad())configureCubeMapSphere(leftEar, mouth, rightEar, hair, forehead, fronthair);
+    }
+    let hair = new Image();
+    hair.crossOrigin = "";
+    hair.src = "https://ekim1678.github.io/personal-website/resources/computergraphicstextures/hairtex.jpg"
+    hair.onload = function () {
+        configureTexture(hair);
+        hairLoad = true;
+        if(checkLoad())configureCubeMapSphere(leftEar, mouth, rightEar, hair, forehead, fronthair);
+    }
+    let forehead = new Image();
+    forehead.crossOrigin = "";
+    forehead.src = "https://ekim1678.github.io/personal-website/resources/computergraphicstextures/forehead.jpg"
+    forehead.onload = function () {
+        configureTexture(forehead);
+        foreheadLoad = true;
+        if(checkLoad())configureCubeMapSphere(leftEar, mouth, rightEar, hair, forehead, fronthair);
+    }
+    let fronthair = new Image();
+    fronthair.crossOrigin = "";
+    fronthair.src = "https://ekim1678.github.io/personal-website/resources/computergraphicstextures/fronthair.jpg"
+    fronthair.onload = function () {
+        configureTexture(fronthair);
+        fronthairLoad = true;
+        if(checkLoad())configureCubeMapSphere(leftEar, mouth, rightEar, hair, forehead, fronthair);
+    }
 
 
-    //img src for sphere texture
-    //"https://ekim1678.github.io/personal-website/resources/computergraphicstextures/spheretexture.jpg"
-
-    // Load the image
+    // Load the image for skybox
     let image = new Image();
     image.crossOrigin = "";
     image.src = "https://ekim1678.github.io/personal-website/resources/computergraphicstextures/skyboxtexture.jpg";
@@ -329,7 +432,7 @@ function drawSphere() {
 
 function drawSkybox() {
     gl.enableVertexAttribArray(vTexCoord);
-    gl.disableVertexAttribArray( vNormal);
+    gl.disableVertexAttribArray(vNormal);
 
     gl.uniform1i(gl.getUniformLocation(program, "isSkybox"), 1);
 
