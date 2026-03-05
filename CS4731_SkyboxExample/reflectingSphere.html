@@ -103,8 +103,8 @@ void main()
             if(isSphere){
                 vec3 refr = refract(viewDirWorld, N_world, 0.5);
                 vec4 refrColor = textureCube(texMap, refr);
-                gl_FragColor = textureCube(texSphereMap, normalize(N_world));
-                //gl_FragColor = 0.5 * fColor + 0.25 * textureCube(texSphereMap, normalize(N_world)) + 0.25 * refrColor;
+                //gl_FragColor = textureCube(texSphereMap, normalize(N_world));
+                gl_FragColor = 0.5 * fColor + 0.25 * textureCube(texSphereMap, normalize(N_world)) + 0.25 * refrColor;
             }
             else{
                 if(isBlade){
