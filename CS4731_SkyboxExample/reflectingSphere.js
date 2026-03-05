@@ -663,7 +663,15 @@ function drawObject(vertices, normals, modelMatrix, isBlade) {
     gl.drawArrays(gl.TRIANGLES, 0, vertices.length);
 }
 
+function pushUniformMatrix(data, uniformName) {
+    let uniformLoc = gl.getUniformLocation(program, uniformName);
+    gl.uniformMatrix4fv(uniformLoc, false, flatten(data));
+}
+
 function drawSphere() {
+    //rotate on x axis
+    let rotMatrix = rotateX(-50);
+    pushUniformMatrix(rotMatrix, "rotSphereMatrix");
     gl.disableVertexAttribArray(vTexCoord);
     gl.enableVertexAttribArray( vNormal);
 

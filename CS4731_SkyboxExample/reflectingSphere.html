@@ -9,10 +9,12 @@ uniform mat4 modelMatrix;
 uniform mat4 cameraMatrix;
 uniform mat4 cameraInverseMatrix;
 uniform mat4 projectionMatrix;
+uniform mat4 rotSphereMatrix;
 varying vec3 pos, N;
 varying vec2 fTexCoord;
 varying vec3 viewDirWorld, N_world;
 uniform bool isSkybox;
+uniform bool isSphere;
 
 void main()
 {
@@ -36,7 +38,13 @@ void main()
         // The surface normal (in world coordinates)
         N_world = normalize(vNormal).xyz;
 
-        gl_Position = projectionMatrix * cameraMatrix * vPosition;
+        if(isSphere){
+            gl_Position = projectionMatrix * cameraMatrix * rotSphereMatrix * vPosition;
+        }
+        else{
+            gl_Position = projectionMatrix * cameraMatrix * vPosition;
+        }
+
     }
     else {
         fTexCoord = vTexCoord;
