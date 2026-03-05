@@ -35,16 +35,16 @@ Note that the model may not display correctly on Firefox, we recommend using Mic
 ##### Mapping a texture onto a sphere
 ##### Applying reflection to a moving object (blade)
 #### What each group member was responsible for designing / developing.
-3D model implementation: Ethan
-3D animation: Ethan, Zack
-2D texturing: Ellie
-Acceleration: Zack
-Bug fixing: Ethan, Zack, Ellie
-Lighting: Zack
-README: Ellie
-Reflection: Ethan
-Refraction: Ellie
-Shadows:
+3D model implementation: Ethan <br>
+3D animation: Ethan, Zack <br>
+2D texturing: Ellie <br>
+Acceleration: Zack <br>
+Bug fixing: Ethan, Zack, Ellie <br>
+Lighting: Zack <br>
+README: Ellie <br>
+Reflection: Ethan <br>
+Refraction: Ellie <br>
+Shadows: <br>
 #### External Sources
 - Guillotine model is "Guillotine" by mfussi on [Thingiverse](https://www.thingiverse.com/thing:22951/files)
 - Skybox texture is "Bank of America in Flames" by Alex Schaefer
