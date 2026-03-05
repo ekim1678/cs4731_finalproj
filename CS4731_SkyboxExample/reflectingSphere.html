@@ -60,6 +60,8 @@ void main()
     uniform sampler2D tex1;
     uniform sampler2D tex2;
     uniform bool isSkybox;
+    uniform bool isSphere;
+    uniform bool isBlade;
     uniform vec4 spotlightPosition;
     uniform vec3 spotDirection;
     uniform float spotCutoff;
@@ -98,10 +100,22 @@ void main()
             vec4 fColor = diffuse + specular + ambient + spotDiffuse;
             fColor.a = 1.0;
 
-            vec3 refr = refract(viewDirWorld, N_world, 0.5);
-            vec4 refrColor = textureCube(texMap, refr);
-
-            gl_FragColor = fColor * (0.5 * textureCube(texSphereMap, normalize(N_world)) + 0.5 * refrColor);
+            if(isSphere){
+                vec3 refr = refract(viewDirWorld, N_world, 0.5);
+                vec4 refrColor = textureCube(texMap, refr);
+                gl_FragColor = textureCube(texSphereMap, normalize(N_world));
+                //gl_FragColor = 0.5 * fColor + 0.25 * textureCube(texSphereMap, normalize(N_world)) + 0.25 * refrColor;
+            }
+            else{
+                if(isBlade){
+                    vec3 refl = reflect(viewDirWorld, N_world);
+                    vec4 texColor = textureCube(texMap, refl);
+                    gl_FragColor = 0.5 * fColor + 0.5 * texColor;
+                }
+                else{
+                     gl_FragColor = fColor;
+                }
+            }
         }
         else {
             gl_FragColor = texture2D(tex1, fTexCoord);
