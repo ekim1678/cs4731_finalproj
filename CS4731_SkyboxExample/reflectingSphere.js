@@ -33,6 +33,10 @@ let animating = false;
 let bladeDir = -1;
 let bladeSpeed = 2.0;
 
+let sphere1StartY = -3.5;
+let sphere1OffsetY = sphere1StartY;
+let sphereSpeed = 1.0;
+
 let lastTime = 0.0;
 
 let cameraMatrixLoc, cameraInverseMatrixLoc;
@@ -392,7 +396,6 @@ window.onload = async function init() {
 
     gl.enable(gl.DEPTH_TEST);
 
-
     program = initShaders( gl, "vertex-shader", "fragment-shader" );
     gl.useProgram( program );
 
@@ -476,6 +479,16 @@ window.onload = async function init() {
     gl.uniform4fv(gl.getUniformLocation(program, "lightPosition"), flatten(lightPosition));
     gl.uniform1f(gl.getUniformLocation(program, "shininess"), materialShininess);
 
+    //spotlight
+    let spotlightPosition = vec4(3.0, 0.0, 0.0, 1.0);
+    let spotDirection = normalize(vec3(-spotlightPosition[0], -spotlightPosition[1], -spotlightPosition[2]));
+    let spotCutoff = Math.cos(radians(5.0));
+    let spotColor = vec4(1.0, 1.0, 1.0, 1.0);
+
+    gl.uniform3fv(gl.getUniformLocation(program, "spotDirection"), flatten(spotDirection));
+    gl.uniform1f(gl.getUniformLocation(program, "spotCutoff"), spotCutoff);
+    gl.uniform4fv(gl.getUniformLocation(program, "spotColor"), flatten(spotColor));
+    gl.uniform4fv(gl.getUniformLocation(program, "spotlightPosition"), flatten(spotlightPosition));
 
     sphereCubeMap = gl.createTexture()
 
@@ -484,7 +497,6 @@ window.onload = async function init() {
     configureDefaultSphereTexture();
     configureDefaultCubeMap();
     configureDefaultCubeMapSphere();
-
 
     //Load the image for sphere
     let leftEar = new Image();
@@ -598,13 +610,14 @@ window.onload = async function init() {
         if (event.key === "k" || event.key === "K") {
             if(animating){
                 //bladeOffsetY = bladeStartY;
-                bladeSpeed = 100.0;
+                bladeSpeed = 150.0;
                 bladeDir = 1;
             }
             else{
                 animating = true;
                 bladeSpeed = 2.0;
                 bladeDir = -1;
+                sphere1OffsetY = sphere1StartY;
             }
         }
         let rotSpeed = 0.03;
@@ -734,6 +747,7 @@ function render() {
             bladeSpeed *= 1.25;
         }
         bladeOffsetY += bladeDir * bladeSpeed * deltaTime;
+        sphere1OffsetY -= sphereSpeed * deltaTime
 
         if (bladeOffsetY <= bladeEndY) {
             bladeOffsetY = bladeEndY;
@@ -747,8 +761,6 @@ function render() {
             animating = false;
         }
     }
-
-    //let eye = vec3(2 * Math.sin(alpha), 0.0, 2 * Math.cos(alpha));
 
     alpha += 0.005;
 
@@ -776,7 +788,12 @@ function render() {
 
     drawObject(bladeVertices, bladeNormals, bladeWorld);
 
-    //drawSphere();
+    let sphereModel = translate(0, sphere1OffsetY, 0.5);
+    let sphereMatrix = mult(cameraMatrix, sphereModel);
+
+    gl.uniformMatrix4fv(cameraMatrixLoc, false, flatten(sphereMatrix));
+
+    drawSphere();
 
     requestAnimFrame(render);
     console.log(bladeStartY, bladeEndY);
