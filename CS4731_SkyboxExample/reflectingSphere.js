@@ -506,7 +506,6 @@ window.onload = async function init() {
         gl.activeTexture(gl.TEXTURE3);
         gl.bindTexture(gl.TEXTURE_CUBE_MAP, sphereCubeMap);
         gl.texImage2D(gl.TEXTURE_CUBE_MAP_NEGATIVE_X, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, leftEar);
-        //configureSphereTexture(leftEar);
         leftLoad = true;
         if(checkLoad()){configureCubeMapSphere()}
     }
@@ -517,7 +516,6 @@ window.onload = async function init() {
         gl.activeTexture(gl.TEXTURE3);
         gl.bindTexture(gl.TEXTURE_CUBE_MAP, sphereCubeMap);
         gl.texImage2D(gl.TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, mouth);
-        //configureSphereTexture(mouth);
         mouthLoad = true;
         if(checkLoad())configureCubeMapSphere();
     }
@@ -528,7 +526,6 @@ window.onload = async function init() {
         gl.activeTexture(gl.TEXTURE3);
         gl.bindTexture(gl.TEXTURE_CUBE_MAP, sphereCubeMap);
         gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_X, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, rightEar);
-        //configureSphereTexture(rightEar);
         rightLoad = true;
         if(checkLoad())configureCubeMapSphere();
     }
@@ -539,7 +536,6 @@ window.onload = async function init() {
         gl.activeTexture(gl.TEXTURE3);
         gl.bindTexture(gl.TEXTURE_CUBE_MAP, sphereCubeMap);
         gl.texImage2D(gl.TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, hair);
-        //configureSphereTexture(hair);
         hairLoad = true;
         if(checkLoad())configureCubeMapSphere();
     }
@@ -550,7 +546,6 @@ window.onload = async function init() {
         gl.activeTexture(gl.TEXTURE3);
         gl.bindTexture(gl.TEXTURE_CUBE_MAP, sphereCubeMap);
         gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_Z, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, forehead);
-        //configureSphereTexture(forehead);
         foreheadLoad = true;
         if(checkLoad())configureCubeMapSphere();
     }
@@ -561,7 +556,6 @@ window.onload = async function init() {
         gl.activeTexture(gl.TEXTURE3);
         gl.bindTexture(gl.TEXTURE_CUBE_MAP, sphereCubeMap);
         gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_Y, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, fronthair);
-        //configureSphereTexture(fronthair);
         fronthairLoad = true;
         if(checkLoad())configureCubeMapSphere();
     }
@@ -647,10 +641,17 @@ window.onload = async function init() {
     render();
 }
 
-function drawObject(vertices, normals, modelMatrix) {
+function drawObject(vertices, normals, modelMatrix, isBlade) {
 
     let mat = mult(cameraMatrix, modelMatrix);
     gl.uniform1i(gl.getUniformLocation(program, "isSkybox"), 0);
+    gl.uniform1i(gl.getUniformLocation(program, "isSphere"), 0);
+    if(isBlade){
+        gl.uniform1i(gl.getUniformLocation(program, "isBlade"), 1);
+    }
+    else{
+        gl.uniform1i(gl.getUniformLocation(program, "isBlade"), 0);
+    }
 
     gl.uniformMatrix4fv(cameraMatrixLoc, false, flatten(mat));
     const vBuffer = gl.createBuffer();
@@ -677,6 +678,8 @@ function drawSphere() {
     gl.enableVertexAttribArray( vNormal);
 
     gl.uniform1i(gl.getUniformLocation(program, "isSkybox"), 0);
+    gl.uniform1i(gl.getUniformLocation(program, "isSphere"), 1);
+    gl.uniform1i(gl.getUniformLocation(program, "isBlade"), 0);
 
     let vBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
@@ -692,6 +695,8 @@ function drawSkybox() {
     gl.disableVertexAttribArray(vNormal);
 
     gl.uniform1i(gl.getUniformLocation(program, "isSkybox"), 1);
+    gl.uniform1i(gl.getUniformLocation(program, "isSphere"), 0);
+    gl.uniform1i(gl.getUniformLocation(program, "isBlade"), 0);
 
     let vBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
@@ -781,12 +786,12 @@ function render() {
     gl.depthMask(true);
 
     let frameModel = mat4();
-    drawObject(frameVertices, frameNormals, frameModel);
+    drawObject(frameVertices, frameNormals, frameModel, false);
 
     let bladeLocal = translate(0, bladeOffsetY, 0);
     let bladeWorld = mult(frameModel, bladeLocal);
 
-    drawObject(bladeVertices, bladeNormals, bladeWorld);
+    drawObject(bladeVertices, bladeNormals, bladeWorld, true);
 
     let sphereModel = translate(0, sphere1OffsetY, 0.5);
     let sphereMatrix = mult(cameraMatrix, sphereModel);
