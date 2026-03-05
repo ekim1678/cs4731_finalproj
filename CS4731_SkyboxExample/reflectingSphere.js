@@ -35,9 +35,10 @@ let bladeSpeed = 2.0;
 
 let sphere1StartY = -3.5;
 let sphere1OffsetY = sphere1StartY;
-let sphereSpeed = 1.0;
+let sphereSpeed = 16.0;
 
 let lastTime = 0.0;
+let headsRolling = false;
 
 let cameraMatrixLoc, cameraInverseMatrixLoc;
 let vTexCoord, vNormal, vPosition;
@@ -752,7 +753,12 @@ function render() {
             bladeSpeed *= 1.25;
         }
         bladeOffsetY += bladeDir * bladeSpeed * deltaTime;
-        sphere1OffsetY -= sphereSpeed * deltaTime
+        if (bladeOffsetY <= bladeEndY) {
+            headsRolling = true;
+        }
+        if (headsRolling) {
+            sphere1OffsetY -= sphereSpeed * deltaTime
+        }
 
         if (bladeOffsetY <= bladeEndY) {
             bladeOffsetY = bladeEndY;
@@ -763,6 +769,8 @@ function render() {
         if (bladeOffsetY >= bladeStartY) {
             bladeOffsetY = bladeStartY;
             bladeDir = -1;
+            sphere1OffsetY = sphere1StartY;
+            headsRolling = false;
             animating = false;
         }
     }
