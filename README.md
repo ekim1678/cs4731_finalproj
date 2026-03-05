@@ -30,21 +30,23 @@ Acceleration: the guillotine blade accelerates as it falls
 Camera movement is controlled by the arrow keys. <br>
 Press K to trigger the animation. <br>
 Press L to toggle specular lighting and O to toggle diffuse lighting. <br>
+Press S to toggle shadows. <br>
 Note that the model may not display correctly on Firefox, we recommend using Microsoft Edge or Opera.
 #### What challenges you faced in completing the project.
 ##### Mapping a texture onto a sphere
 ##### Applying reflection to a moving object (blade)
 #### What each group member was responsible for designing / developing.
-3D model implementation: Ethan <br>
+3D models: Ethan <br>
 3D animation: Ethan, Zack <br>
 2D texturing: Ellie <br>
 Acceleration: Zack <br>
 Bug fixing: Ethan, Zack, Ellie <br>
+Hierarchical particles: Zack <br>
 Lighting: Zack <br>
 README: Ellie <br>
 Reflection: Ethan <br>
 Refraction: Ellie <br>
-Shadows: <br>
+Shadows: Ellie <br>
 #### External Sources
 - Guillotine model is "Guillotine" by mfussi on [Thingiverse](https://www.thingiverse.com/thing:22951/files)
 - Skybox texture is "Bank of America in Flames" by Alex Schaefer
