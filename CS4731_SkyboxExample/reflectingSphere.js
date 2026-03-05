@@ -482,8 +482,8 @@ window.onload = async function init() {
 
     //spotlight
     let spotlightPosition = vec4(3.0, 0.0, 0.0, 1.0);
-    let spotDirection = normalize(vec3(-spotlightPosition[0], -spotlightPosition[1], -spotlightPosition[2]));
-    let spotCutoff = Math.cos(radians(5.0));
+    let spotDirection = vec3(0.0, 0.0, 0.0);
+    let spotCutoff = Math.cos(radians(25.0));
     let spotColor = vec4(1.0, 1.0, 1.0, 1.0);
 
     gl.uniform3fv(gl.getUniformLocation(program, "spotDirection"), flatten(spotDirection));

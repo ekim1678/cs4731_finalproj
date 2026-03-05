@@ -22,18 +22,16 @@ void main()
         // Calculate L
         vec4 nm = vNormal;
         nm.w = 1.0;     //To calculate the lighting vector, we need to convert the normal position
-        pos = (cameraMatrix * nm).xyz;
+        pos = (cameraMatrix * vPosition).xyz;
 
         // Calculate N
         //Here, we need to convert the normal direction (not the position)
         N = normalize(cameraMatrix * vNormal).xyz;
 
-        // Camera position in eye coordinates is vec4(0.0, 0.0, 0.0, 1.0),
-        // and we multiply by viewMatrixInverse to get the position in world coordinates
         vec3 camPosWorld = (cameraInverseMatrix * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
 
         // The view vector (in world coordinates)
-        viewDirWorld = vPosition.xyz - camPosWorld;
+        viewDirWorld = -pos;
 
         // The surface normal (in world coordinates)
         N_world = normalize(vNormal).xyz;
