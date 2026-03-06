@@ -25,8 +25,8 @@ Keyboard controls for the following:
 - Toggle the diffuse and specular components of the point light on and off (keeping ambient). When the point light is off, the shadows should disappear: use L key to toggle specular lighting, O key to toggle diffuse lighting
 - Control the camera’s motion with the keyboard: use the arrow keys to move around the scene
 ##### Extra credit functionality:
-Acceleration: the guillotine blade accelerates as it falls
-Delay: sphere animation is delayed slightly from the blade for realism
+Acceleration: the guillotine blade accelerates as it falls <br>
+Delay: sphere animation is delayed slightly from the blade for realism <br>
 Reset: blade returns to its initial position to complete the animation
 #### Any additional instructions that might be needed to fully use your project (interaction controls, etc.)
 Camera movement is controlled by the arrow keys. <br>
@@ -41,7 +41,7 @@ Note that the model may not display correctly on Firefox, we recommend using Mic
 3D models: Ethan <br>
 3D animation: Ethan, Zack <br>
 2D texturing: Ellie <br>
-Acceleration: Zack <br>
+Acceleration, Delay, Reset: Zack <br>
 Bug fixing: Ethan, Zack, Ellie <br>
 Hierarchical particles: Zack <br>
 Lighting: Zack <br>
