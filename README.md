@@ -10,12 +10,12 @@ The blade then rises, returning to its original position. User input can change 
 ##### Core functionality:
 Two 3D models that are more complex than a simple shape: guillotine blade, frame <br>
 Two model transformations that animate: guillotine blade, the sphere falling to the ground after it comes down <br>
-At least one point that illuminates using Phong shading: <br>
-At least one spotlight with clearly visible boundaries: spotlight on the <br>
+At least one point that illuminates using Phong shading: point light at (1.5, 1.5, 3.0)<br>
+At least one spotlight with clearly visible boundaries: spotlight on the middle of the guillotine frame <br>
 At least one textured object that also has a default texture: the sphere has an image texture but defaults to a simple red sphere <br>
 At least one camera animation: arrow keys controlling movement <br>
 At least one hierarchical model with at least two levels (parent, child, and grandchild): blood particle effects <br>
-At least one clearly visible projection shadow cast by the point light. you can also opt to use a shadow buffer. <br>
+At least one clearly visible projection shadow cast by the point light: guillotine frame/blade shadow <br>
 At least one clearly visible reflection: guillotine blade <br>
 At least one clearly visible refraction: sphere <br>
 A textured skybox: bank painting texture <br>
@@ -35,8 +35,10 @@ Press L to toggle specular lighting and O to toggle diffuse lighting. <br>
 Press S to toggle shadows. <br>
 Note that the model may not display correctly on Firefox, we recommend using Microsoft Edge or Opera.
 #### What challenges you faced in completing the project.
-##### Mapping a texture onto a sphere
+##### Mapping a texture with different faces onto a sphere
+One of the easier ways to map an image onto a sphere is by using a cube mapping, but to change the individual cube face textures, you have to create your mappings differently and specify which face you're utilizing.
 ##### Applying reflection to a moving object (blade)
+Initially the lighting model we had was using the vNormals to calculate reflection, but we had to change this when working with a flat planed object. 
 #### What each group member was responsible for designing / developing.
 3D models: Ethan <br>
 3D animation: Ethan, Zack <br>
@@ -49,7 +51,8 @@ README: Ellie <br>
 Reflection: Ethan <br>
 Refraction: Ellie <br>
 Shadows: Ellie <br>
+Spotlight: Ethan
 #### External Sources
 - Guillotine model is "Guillotine" by mfussi on [Thingiverse](https://www.thingiverse.com/thing:22951/files)
-- Skybox texture is "Bank of America in Flames" by Alex Schaefer
+- Skybox texture is "Bank of America in Flames" by Alex Schaefer, modified by Ellie
 - Sphere texture original is "Elon Musk" by Ricardo Galvão, modified by Ellie
