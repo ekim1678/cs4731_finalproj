@@ -68,6 +68,7 @@ void main()
     uniform bool isSkybox;
     uniform bool isSphere;
     uniform bool isBlade;
+    uniform bool isShadow;
     uniform vec4 spotlightPosition;
     uniform vec3 spotDirection;
     uniform float spotCutoff;
@@ -121,6 +122,10 @@ void main()
                 else{
                      gl_FragColor = fColor;
                 }
+            }
+
+            if(isShadow){
+                gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
             }
         }
         else {

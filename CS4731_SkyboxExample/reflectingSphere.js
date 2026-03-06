@@ -46,6 +46,7 @@ let cameraMatrix;
 
 let useSpecular = true;
 let useDiffuse = true;
+let useShadow = true;
 
 let eye = vec3(3, 2, 6);
 let at = vec3(0.0, 0.0, 0.0);
@@ -636,6 +637,9 @@ window.onload = async function init() {
         if (event.key === "o" || event.key === "O"){
             useDiffuse = !useDiffuse;
         }
+        if(event.key === "s" || event.key === "S"){
+            useShadow = !useShadow;
+        }
     });
     lastTime = performance.now();
 
@@ -647,6 +651,7 @@ function drawObject(vertices, normals, modelMatrix, isBlade) {
     let mat = mult(cameraMatrix, modelMatrix);
     gl.uniform1i(gl.getUniformLocation(program, "isSkybox"), 0);
     gl.uniform1i(gl.getUniformLocation(program, "isSphere"), 0);
+    gl.uniform1i(gl.getUniformLocation(program, "isShadow"), 0);
     if(isBlade){
         gl.uniform1i(gl.getUniformLocation(program, "isBlade"), 1);
     }
@@ -661,6 +666,21 @@ function drawObject(vertices, normals, modelMatrix, isBlade) {
     gl.vertexAttribPointer(vPosition, 4, gl.FLOAT, false, 0, 0);
 
     gl.drawArrays(gl.TRIANGLES, 0, vertices.length);
+
+    if(useShadow){
+        gl.uniform1i(gl.getUniformLocation(program, "isShadow"), 1);
+        //point light is a vec4 (1.5, 1.5, 3.0, 1.0)
+        let shadowMatrix = mult(mat, translate(-1.5, -1.5, -3.0));
+        shadowMatrix = mult(translate(1.5, 1.5, 3.0), shadowMatrix);
+
+        gl.uniformMatrix4fv(cameraMatrixLoc, false, flatten(shadowMatrix));
+        const vBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, flatten(vertices), gl.STATIC_DRAW);
+        gl.vertexAttribPointer(vPosition, 4, gl.FLOAT, false, 0, 0);
+
+        gl.drawArrays(gl.TRIANGLES, 0, vertices.length);
+    }
 }
 
 function pushUniformMatrix(data, uniformName) {
@@ -669,7 +689,7 @@ function pushUniformMatrix(data, uniformName) {
 }
 
 function drawSphere() {
-    //rotate on x axis
+    //rotate on x axis so texture shows better
     let rotMatrix = rotateX(-50);
     pushUniformMatrix(rotMatrix, "rotSphereMatrix");
     gl.disableVertexAttribArray(vTexCoord);
@@ -678,6 +698,7 @@ function drawSphere() {
     gl.uniform1i(gl.getUniformLocation(program, "isSkybox"), 0);
     gl.uniform1i(gl.getUniformLocation(program, "isSphere"), 1);
     gl.uniform1i(gl.getUniformLocation(program, "isBlade"), 0);
+    gl.uniform1i(gl.getUniformLocation(program, "isShadow"), 0);
 
     let vBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
@@ -695,6 +716,7 @@ function drawSkybox() {
     gl.uniform1i(gl.getUniformLocation(program, "isSkybox"), 1);
     gl.uniform1i(gl.getUniformLocation(program, "isSphere"), 0);
     gl.uniform1i(gl.getUniformLocation(program, "isBlade"), 0);
+    gl.uniform1i(gl.getUniformLocation(program, "isShadow"), 0);
 
     let vBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
