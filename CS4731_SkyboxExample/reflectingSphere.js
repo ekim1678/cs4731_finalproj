@@ -46,6 +46,7 @@ let cameraMatrix;
 
 let useSpecular = true;
 let useDiffuse = true;
+let useShadow = true;
 
 let eye = vec3(3, 2, 6);
 let at = vec3(0.0, 0.0, 0.0);
@@ -636,6 +637,9 @@ window.onload = async function init() {
         if (event.key === "o" || event.key === "O"){
             useDiffuse = !useDiffuse;
         }
+        if(event.key === "s" || event.key === "S"){
+            useShadow = !useShadow;
+        }
     });
     lastTime = performance.now();
 
@@ -669,7 +673,7 @@ function pushUniformMatrix(data, uniformName) {
 }
 
 function drawSphere() {
-    //rotate on x axis
+    //rotate on x axis so texture shows better
     let rotMatrix = rotateX(-50);
     pushUniformMatrix(rotMatrix, "rotSphereMatrix");
     gl.disableVertexAttribArray(vTexCoord);
