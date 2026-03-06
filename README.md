@@ -26,6 +26,8 @@ Keyboard controls for the following:
 - Control the camera’s motion with the keyboard: use the arrow keys to move around the scene
 ##### Extra credit functionality:
 Acceleration: the guillotine blade accelerates as it falls
+Delay: sphere animation is delayed slightly from the blade for realism
+Reset: blade returns to its initial position to complete the animation
 #### Any additional instructions that might be needed to fully use your project (interaction controls, etc.)
 Camera movement is controlled by the arrow keys. <br>
 Press K to trigger the animation. <br>
