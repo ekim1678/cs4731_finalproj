@@ -12,6 +12,7 @@ uniform mat4 projectionMatrix;
 uniform mat4 rotSphereMatrix;
 varying vec3 pos, N;
 varying vec2 fTexCoord;
+varying vec3 skyboxDir;
 varying vec3 viewDirWorld, N_world;
 uniform bool isSkybox;
 uniform bool isSphere;
@@ -46,6 +47,7 @@ void main()
     }
     else {
         fTexCoord = vTexCoord;
+        skyboxDir = (vPosition).xyz; // since cube is centered at origin
         gl_Position = projectionMatrix * cameraMatrix * modelMatrix * vPosition;
     }
 }
@@ -59,6 +61,7 @@ void main()
     uniform float shininess;
     varying vec3 pos, N;
     varying vec2 fTexCoord;
+    varying vec3 skyboxDir;
     varying vec3 viewDirWorld, N_world;
     uniform vec4 lightPosition;
     uniform samplerCube texMap;
@@ -110,7 +113,6 @@ void main()
             if(isSphere){
                 vec3 refr = refract(viewDirWorld, N_world, 0.5);
                 vec4 refrColor = textureCube(texMap, refr);
-                //gl_FragColor = textureCube(texSphereMap, normalize(N_world));
                 gl_FragColor = 0.5 * fColor + 0.3 * textureCube(texSphereMap, normalize(N_world)) + 0.2 * refrColor;
             }
             else{
@@ -129,7 +131,8 @@ void main()
             }
         }
         else {
-            gl_FragColor = texture2D(tex1, fTexCoord);
+            gl_FragColor = textureCube(texMap, normalize(skyboxDir));
+             //texture2D(tex1, fTexCoord);
         }
 
     }
