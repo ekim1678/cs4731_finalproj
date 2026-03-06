@@ -4,8 +4,7 @@ Ethan Busa, Zack Robinson, Ellie Kim
 
 #### A brief description of what you created
 Our final project for CS 4731 is a guillotine with a reflective blade that animates on pressing "K" to come down on a 
-refracting sphere textured with a head. Hierarchical spheres create a blood particle effect upon animation.
-The blade then rises, returning to its original position. User input can change the lighting and camera angle of the scene.
+refracting sphere textured with a head. The blade then rises, returning to its original position. User input can change the lighting and camera angle of the scene.
 #### A description of how each of the above topics are represented in your program
 ##### Core functionality:
 Two 3D models that are more complex than a simple shape: guillotine blade, frame <br>
@@ -14,7 +13,6 @@ At least one point that illuminates using Phong shading: point light at (1.5, 1.
 At least one spotlight with clearly visible boundaries: spotlight on the middle of the guillotine frame <br>
 At least one textured object that also has a default texture: the sphere has an image texture but defaults to a simple red sphere <br>
 At least one camera animation: arrow keys controlling movement <br>
-At least one hierarchical model with at least two levels (parent, child, and grandchild): blood particle effects <br>
 At least one clearly visible projection shadow cast by the point light: guillotine frame/blade shadow <br>
 At least one clearly visible reflection: guillotine blade <br>
 At least one clearly visible refraction: sphere <br>
@@ -45,7 +43,6 @@ Initially the lighting model we had was using the vNormals to calculate reflecti
 2D texturing: Ellie <br>
 Acceleration, Delay, Reset: Zack <br>
 Bug fixing: Ethan, Zack, Ellie <br>
-Hierarchical particles: Zack <br>
 Lighting: Zack <br>
 README: Ellie <br>
 Reflection: Ethan <br>
