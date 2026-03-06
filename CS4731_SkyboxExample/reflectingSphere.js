@@ -24,6 +24,7 @@ let normalsArray = [];
 let texCoordsArray = [];
 
 let pointsArraySphere = [];
+let pointsArraySphereRoot = [];
 let pointsArrayCube = [];
 
 var sphereCubeMap;
@@ -50,6 +51,8 @@ let sphereSpeed = 16.0;
 
 let lastTime = 0.0;
 let headsRolling = false;
+
+let treeRoot;
 
 let cameraMatrixLoc, cameraInverseMatrixLoc;
 let vTexCoord, vNormal, vPosition;
@@ -501,6 +504,36 @@ function loadTextures(){
     }
 }
 
+//hierarchy structure
+function Tree(root) {
+    this.root = root;
+}
+
+function Node(sphere, modelMatrix) {
+    this.sphere = sphere;
+    this.modelMatrix = modelMatrix;
+    this.children = [];
+}
+
+function addChild(node, child){
+    node.children.push(child);
+}
+
+//transformation functions for hierarchy model
+function transformChildren(node){
+    node.children.forEach(child=>{
+        child.modelMatrix = mult(child.modelMatrix, node.modelMatrix);
+        child.children.forEach(subNode=>{
+            subNode.modelMatrix = mult(subNode.modelMatrix, child.modelMatrix);
+        })
+    })
+}
+
+function transformNode(node, transMatrix){
+    node.modelMatrix = mult(node.modelMatrix, transMatrix);
+    transformChildren(node);
+}
+
 window.onload = async function init() {
 
     canvas = document.getElementById( "gl-canvas" );
@@ -519,6 +552,18 @@ window.onload = async function init() {
     // Sphere vertices
     tetrahedron(5);
     pointsArraySphere = pointsArray;
+    pointsArraySphereRoot = pointsArray;
+    // Particle vertices
+    //we want particles to be smaller than the standard sphere array
+    let particleRoot = new Node(pointsArraySphereRoot, scalem(0.5, 0.5, 0.5));
+    for(let i = 0; i < 3;  i++){
+        let childNode = new Node(pointsArraySphereRoot, scalem(0.5, 0.5, 0.5));
+        addChild(particleRoot, childNode);
+    }
+    treeRoot = new Tree(particleRoot);
+/*    for(let children = 0; children < particleRoot.children.length; children++){
+        let grandchildNode = Node(tetrahedron(5), scalem(0.5, 0.5, 0.5));
+    }*/
 
     pointsArray = [];
 
@@ -755,6 +800,31 @@ function drawSphere() {
 }
 
 
+function drawTree(tree) {
+    drawParticles(tree.root);
+}
+
+function drawParticles(sphere)
+{
+    //color should be red
+    let color = new Uint8Array([255, 0, 0, 255]);
+
+    gl.uniform1i(gl.getUniformLocation(program, "isSkybox"), 0);
+    gl.uniform1i(gl.getUniformLocation(program, "isSphere"), 0);
+    gl.uniform1i(gl.getUniformLocation(program, "isBlade"), 0);
+    gl.uniform1i(gl.getUniformLocation(program, "isShadow"), 0);
+
+    let vBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, flatten(sphere), gl.STATIC_DRAW);
+    gl.vertexAttribPointer(vPosition, 4, gl.FLOAT, false, 0, 0);
+
+
+    gl.drawArrays( gl.TRIANGLES, 0, sphere.length);
+
+}
+
+
 function drawSkybox() {
     gl.enableVertexAttribArray(vTexCoord);
     gl.disableVertexAttribArray(vNormal);
@@ -811,6 +881,8 @@ function render() {
     }
     gl.uniform4fv(gl.getUniformLocation(program, "specularProduct"), flatten(specularProduct));
     gl.uniform4fv(gl.getUniformLocation(program, "diffuseProduct"), flatten(diffuseProduct));
+
+    drawTree(treeRoot);
 
     const now = performance.now();
     const deltaTime = (now - lastTime) / 1000.0;
