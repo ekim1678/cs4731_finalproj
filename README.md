@@ -51,7 +51,8 @@ README: Ellie <br>
 Reflection: Ethan <br>
 Refraction: Ellie <br>
 Shadows: Ellie <br>
-Spotlight: Ethan
+Spotlight: Ethan <br>
+Video recording/submission: Zack
 #### External Sources
 - Guillotine model is "Guillotine" by mfussi on [Thingiverse](https://www.thingiverse.com/thing:22951/files)
 - Skybox texture is "Bank of America in Flames" by Alex Schaefer, modified by Ellie

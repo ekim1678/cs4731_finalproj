@@ -1,3 +1,7 @@
+//Created by Ethan Busa, Zack Robinson, & Ellie Kim
+
+//Extra credit features: acceleration on guillotine blade, reset animation for guillotine, and a delay on the sphere with reference to the blade
+
 let canvas;
 let gl;
 let program;
